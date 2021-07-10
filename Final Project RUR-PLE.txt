@@ -1,0 +1,278 @@
+import random
+p1 = input_string("ingrese nametag usuario 1")
+p2 = input_string("ingrese nametag usuario 2")
+g1 = UsedRobot(1,1,"s",5,"P1","light blue")
+g2 = UsedRobot(5,5,"s",10,"P2","yellow")
+asignacion = random.randint(0,1)
+if asignacion == 0:
+    print p1,"sera el robot azul claro"
+    print p2,"sera el robot amarillo"
+    print "incia", p1
+    turn = 0
+    n2 = p2
+    n1 = p1
+if asignacion == 1:
+    print p1,"sera el robot amarillo"
+    print p2,"sera el robot azul claro"
+    print "inicia", p1
+    turn = 1
+    n1 = p2
+    n2 = p1
+g1.set_delay(0)
+g2.set_delay(0)
+winner = 0
+turns = 0
+r = [g1 , g2]
+board = [[0,0,0],[0,0,0],[0,0,0]]
+nueva_fila = []
+columnas = len(board[0])
+filas = len(board)
+sumas = 0
+suma = 0
+def win():
+    global suma
+    global sumas
+    global winner
+    if suma == 4.5:
+        winner = 2
+    if suma == 6:
+        winner = 1
+    if ver0 == 4.5:
+        winner = 2
+    if ver0 == 6:
+        winner = 1
+    if ver1 == 4.5:
+        winner = 2
+    if ver1 == 6:
+        winner = 1
+    if ver2 == 4.5:
+        winner = 2
+    if ver2 == 6:
+        winner = 1
+    if dia1 == 4.5:
+        winner = 2
+    if dia1 == 6:
+        winner = 1
+    if dia2 == 4.5:
+        winner = 2
+    if dia2 == 6:
+        winner = 1
+def right(x):
+    repeat(x.turn_left,3)
+def back(x):
+    repeat(x.turn_left,2)
+def movex(x):
+    global posx
+    repeat(x.move,posx - 1)
+def moveex(x):
+    global posx
+    if posx == 2:
+        repeat(x.move,posx + 1)
+    elif posx == 3:
+        repeat(x.move,posx - 1)
+    elif posx == 4:
+        repeat(x.move,posx - 3)
+def left(x):
+    x.turn_left()
+def put(x):
+    repeat(x.put_beeper,2)
+def verify():
+    global posx
+    global posy
+    while ((posx > 4) or (posx < 2)):
+            posx = input_int("error ingrese casilla en avenue (2-4)")
+    while ((posy > 4) or (posy < 2)):
+            posy = input_int("error ingrese casilla en street (2-4)")
+def posy2(x):
+    global turns
+    if turn == 0:
+        left(x)
+        movex(x)
+        left(x)
+        g1.move()
+        g1.put_beeper()
+        back(x)
+        g1.move()
+        right(x)
+        movex(x)
+        left(x)
+        board[posy][posx - 2] = 1.5
+        turns += 1
+    elif turn == 1:
+        repeat(x.move,4)
+        right(x)
+        moveex(x)
+        right(x)
+        g2.move()
+        put(x)
+        back(x)
+        g2.move()
+        left(x)
+        moveex(x)
+        left(x)
+        repeat(g2.move,4)
+        back(x)
+        board[posy][posx - 2] = 2
+        turns += 1
+def posy3(x):
+    global turns
+    if turn == 0:
+        back(x)
+        repeat(g1.move,2)
+        right(x)
+        movex(x)
+        g1.put_beeper()
+        back(x)
+        movex(x)
+        left(x)
+        repeat(g1.move,2)
+        board[posy - 2][posx - 2] = 1.5
+        turns += 1
+    elif turn == 1:
+        repeat(g2.move,2)
+        right(x)
+        moveex(x)
+        put(x)
+        back(x)
+        moveex(x)
+        left(x)
+        repeat(g2.move,2)
+        back(x)
+        board [posy - 2][posx - 2] = 2
+        turns += 1
+def posy4(x):
+    global turns
+    if turn == 0:
+        back(x)
+        repeat(g1.move,4)
+        right(x)
+        movex(x)
+        right(x)
+        g1.move()
+        g1.put_beeper()
+        back(x)
+        g1.move()
+        left(x)
+        movex(g1)
+        left(x)
+        repeat(g1.move,4)
+        board[posy - 4][posx - 2] = 1.5
+        turns += 1
+    elif turn == 1:
+        right(x)
+        moveex(x)
+        left(x)
+        g2.move()
+        put(x)
+        back(x)
+        g2.move()
+        right(x)
+        moveex(x)
+        right(x)
+        board[posy - 4][posx - 2] = 2
+        turns += 1
+def vposy2():
+    global g1
+    global g2
+    global turn
+    if turn == 0:
+        if board[posy][posx - 2] == 0:
+            posy2(g1)
+            turn = 1
+        else:
+            print"casilla ocupada, intente con otra"
+            turn = 0
+    elif turn == 1:
+        if board[posy][posx - 2] == 0:
+            posy2(g2)
+            turn = 0
+        else:
+            print"casilla ocupada,intente con otra"
+            turn = 1
+def vposy3():
+    global g1
+    global g2
+    global turn
+    if turn == 0:
+        if board[posy - 2][posx - 2] == 0:
+            posy3(g1)
+            turn = 1
+        else:
+            print"casilla ocupada, intente con otra"
+            turn = 0
+    elif turn == 1:
+        if board[posy - 2][posx - 2] == 0:
+            posy3(g2)
+            turn = 0
+        else:
+            print"casilla ocupada,intente con otra"
+            turn = 1
+def vposy4():
+    global g1
+    global g2
+    global turn
+    if turn == 0:
+        if board[posy - 4][posx - 2] == 0:
+            posy4(g1)
+            turn = 1
+        else:
+            print"casilla ocupada, intente con otra"
+            turn = 0
+    elif turn == 1:
+        if board[posy - 4][posx - 2] == 0:
+            posy4(g2)
+            turn = 0
+        else:
+            print"casilla ocupada,intente con otra"
+            turn = 1
+while ((winner == 0) and (turns < 9)):
+    posx = 0
+    posy = 0
+    if turn == 0:
+        if n1 == p2:
+            print "turno de",p2
+        elif n1 == p1:
+            print "turno de",p1
+        posx = input_int("ingrese casilla en avenue")
+        posy = input_int("ingrese casilla en street")
+        verify()
+        print posx,posy
+        if posy != 1:
+            if posy == 2:
+                vposy2()
+            if posy == 3:
+                vposy3()
+            if posy == 4:
+                vposy4()
+    elif turn == 1:
+        if n2 == p1:
+            print "turno de",p1
+        elif n2 == p2:
+            print "turno de",p2
+        posx = input_int("ingrese casilla en avenue")
+        posy = input_int("ingrese casilla en street")
+        verify()
+        print posx,posy
+        if posy != 1:
+            if posy == 2:
+                vposy2()
+            if posy == 3:
+                vposy3()
+            if posy == 4:
+                vposy4()
+    if turns >= 5:
+        dia1 = (board[0][0]) + (board[1][1]) + (board[2][2])
+        dia2 = (board[0][2]) + (board[1][1]) + (board[2][0])
+        ver0 = (board[0][0]) + (board[1][0]) + (board[2][0])
+        ver1 = (board[0][1]) + (board[1][1]) + (board[2][1])
+        ver2 = (board[0][2]) + (board[1][2]) + (board[2][2])
+        for x in range(filas):
+            suma = sum(board[x])
+            win()
+if winner == 2:
+    print "GANO", p1
+elif winner == 1:
+    print "GANO", p2
+else:
+    print "NADIE GANO"
+g2.turn_off()
